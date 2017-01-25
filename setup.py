@@ -10,19 +10,23 @@ from setuptools import setup
 
 version = re.search(
     '^__version__\s*=\s*"(.*)"',
-    open('avcli/version.py').read(),
+    open('avacli/version.py').read(),
     re.M
     ).group(1)
 
 
 setup(
-    name = "avacli",
-    packages = ["avacli"],
-    entry_points = {
-        "console_scripts": ['avacli = avacli.avacli:main']
+    name="avacli",
+    version=version,
+    description="Python command line interface for the AVA Project.",
+    author="AVA Project",
+    author_email="ava_2018@labeip.epitech.eu",
+    packages=["avacli"],
+    install_requires=[
+        'Click',
+        'Requests',
+    ],
+    entry_points={
+        "console_scripts": ['avacli = avacli.avacli:cli']
     },
-    version = version,
-    description = "Python command line interface for the AVA Project.",
-    author = "Dorian Amouroux",
-    author_email = "dor.amouroux@gmail.com",
 )
