@@ -1,4 +1,13 @@
 # ava-cli
+
+## Installation
+
+```bash
+pip install --editable .
+```
+
+## What is it ?
+
 A cli to configure the interface
 
 The CLI will be able to connect to the background running process AVA Daemon.
