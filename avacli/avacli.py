@@ -9,7 +9,7 @@ import requests
 from .version import __version__
 
 
-url = 'http://localhost:8080'
+url = 'http://localhost:8001'
 
 
 @click.group(context_settings={'help_option_names': ['-h', '--help']})
@@ -27,14 +27,14 @@ def login():
     Log in to AVA Cloud.
     """
 
-    username = click.prompt('Please enter your username')
+    email = click.prompt('Please enter your email')
     password = click.prompt('Password', hide_input=True)
     payload = {
-        'username': username,
+        'email': email,
         'password': password
     }
     try:
-        r = requests.post(url + '/user/login', data=payload)
+        r = requests.post(url + '/login', data=payload)
         r.raise_for_status()
     except requests.exceptions.HTTPError as e:
         if r.status_code == 400:
@@ -57,7 +57,7 @@ def logout():
     """
 
     try:
-        r = requests.delete(url + '/user/logout')
+        r = requests.get(url + '/logout')
         r.raise_for_status()
     except requests.exceptions.HTTPError as e:
         if r.status_code == 400:
@@ -71,6 +71,28 @@ def logout():
         sys.exit(1)
     click.echo(r.text)
     click.echo('Logged Out.')
+
+
+@cli.command()
+def me():
+    """
+    Retrieve user information from AVA Cloud.
+    """
+
+    try:
+        r = requests.get(url + '/me')
+        r.raise_for_status()
+    except requests.exceptions.HTTPError as e:
+        if r.status_code == 400:
+            click.echo('Error: Bad credentials', err=True)
+        else:
+            click.echo('Error: Problem happenned', err=True)
+        sys.exit(1)
+    except requests.exceptions.RequestException as e:
+        click.echo('Error: Unable to end the request with the server',
+                   err=True)
+        sys.exit(1)
+    click.echo(r.text)
 
 
 @cli.command()
