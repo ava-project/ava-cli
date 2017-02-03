@@ -92,7 +92,10 @@ def me():
         click.echo('Error: Unable to end the request with the server',
                    err=True)
         sys.exit(1)
-    click.echo(r.text)
+    click.echo('Username: ' + r.json()['username'])
+    click.echo('Email: ' + r.json()['email'])
+    click.echo('First Name: ' + r.json()['first_name'])
+    click.echo('Last Name: ' + r.json()['last_name'])
 
 
 @cli.command()
@@ -123,7 +126,7 @@ def info(id):
     """
 
     try:
-        r = requests.get(url + '/plugins/' + id)
+        r = requests.get(url + '/plugins/' + str(id))
         r.raise_for_status()
     except requests.exceptions.HTTPError as e:
         if r.status_code == 404:
@@ -146,7 +149,7 @@ def install(id):
     """
 
     try:
-        r = requests.get(url + '/plugins/' + id + '/download')
+        r = requests.get(url + '/plugins/' + str(id) + '/download')
         r.raise_for_status()
     except requests.exceptions.HTTPError as e:
         if r.status_code == 400:
@@ -174,7 +177,7 @@ def remove(id):
     """
 
     try:
-        r = requests.delete(url + '/plugins/' + id)
+        r = requests.delete(url + '/plugins/' + str(id))
         r.raise_for_status()
     except requests.exceptions.HTTPError as e:
         if r.status_code == 400:
@@ -202,7 +205,7 @@ def enable(id):
     """
 
     try:
-        r = requests.patch(url + '/plugins/' + id + '/enable')
+        r = requests.patch(url + '/plugins/' + str(id) + '/enable')
         r.raise_for_status()
     except requests.exceptions.HTTPError as e:
         if r.status_code == 400:
@@ -230,7 +233,7 @@ def disable(id):
     """
 
     try:
-        r = requests.patch(url + '/plugins/' + id + '/disable')
+        r = requests.patch(url + '/plugins/' + str(id) + '/disable')
         r.raise_for_status()
     except requests.exceptions.HTTPError as e:
         if r.status_code == 400:
@@ -251,8 +254,7 @@ def disable(id):
 
 
 @cli.command()
-@click.argument('id', type=int)
-def play(id):
+def play():
     """
     Enable daemon listening.
     """
@@ -272,8 +274,7 @@ def play(id):
 
 
 @cli.command()
-@click.argument('id', type=int)
-def pause(id):
+def pause():
     """
     Disable daemon listening.
     """
