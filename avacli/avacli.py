@@ -24,7 +24,7 @@ def cli():
 @cli.command()
 def login():
     """
-    Log in to AVA Cloud.
+    Login to AVA Cloud.
     """
 
     email = click.prompt('Please enter your email')
@@ -53,7 +53,7 @@ def login():
 @cli.command()
 def logout():
     """
-    Log ouf of AVA Cloud.
+    Logout of AVA Cloud.
     """
 
     try:
@@ -115,7 +115,14 @@ def list(keyword=''):
         click.echo('Error: Unable to end the request with the server',
                    err=True)
         sys.exit(1)
-    click.echo(r.text)
+    plugins = r.json()
+    click.echo('Plugin List:')
+    for x in plugins:
+        click.echo('#########################')
+        click.echo('Name: ' + plugins[x]['name'])
+        click.echo('ID: ' + plugins[x]['id'])
+        click.echo('Version: ' + plugins[x]['version'])
+        click.echo('Description: ' + plugins[x]['description'])
 
 
 @cli.command()
@@ -138,7 +145,10 @@ def info(id):
         click.echo('Error: Unable to end the request with the server',
                    err=True)
         sys.exit(1)
-    click.echo(r.text)
+    plugin = r.json()
+    click.echo('Name: ' + plugin['name'])
+    click.echo('Version: ' + plugin['version'])
+    click.echo('Description: ' + plugin['description'])
 
 
 @cli.command()
@@ -149,7 +159,7 @@ def install(id):
     """
 
     try:
-        r = requests.get(url + '/plugins/' + str(id) + '/download')
+        r = requests.get(url + '/plugins/' + str(id) + '/install')
         r.raise_for_status()
     except requests.exceptions.HTTPError as e:
         if r.status_code == 400:

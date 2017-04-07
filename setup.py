@@ -29,4 +29,6 @@ setup(
     entry_points={
         "console_scripts": ['avacli = avacli.avacli:cli']
     },
+    setup_requires=['pytest-runner'],
+    tests_require=['pytest'],
 )
