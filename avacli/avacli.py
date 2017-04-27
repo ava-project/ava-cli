@@ -117,12 +117,12 @@ def list(keyword=''):
         sys.exit(1)
     plugins = r.json()
     click.echo('Plugin List:')
-    for x in plugins:
+    for plugin in plugins:
         click.echo('#########################')
-        click.echo('Name: ' + plugins[x]['name'])
-        click.echo('ID: ' + plugins[x]['id'])
-        click.echo('Version: ' + plugins[x]['version'])
-        click.echo('Description: ' + plugins[x]['description'])
+        click.echo('Name: ' + plugin['name'])
+        click.echo('ID: ' + str(plugin['id']))
+        click.echo('Version: ' + plugin['version'])
+        click.echo('Description: ' + plugin['description'])
 
 
 @cli.command()
