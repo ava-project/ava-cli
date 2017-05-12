@@ -126,14 +126,14 @@ def list(keyword=''):
 
 
 @cli.command()
-@click.argument('id', type=int)
-def info(id):
+@click.argument('plugin name', type=str)
+def info(plugin_name):
     """
     Get information about a plugin.
     """
 
     try:
-        r = requests.get(url + '/plugins/' + str(id))
+        r = requests.get(url + '/plugins/' + plugin_name)
         r.raise_for_status()
     except requests.exceptions.HTTPError as e:
         if r.status_code == 404:
@@ -152,14 +152,44 @@ def info(id):
 
 
 @cli.command()
-@click.argument('id', type=int)
-def install(id):
+@click.argument('plugin name', type=str)
+@click.argument('author', type=str)
+def download(plugin_name, author):
+    """
+    Dowload a plugin.
+    """
+
+    try:
+        r = requests.get(url + '/plugins/' + author + '/' +
+                         plugin_name + '/download')
+        r.raise_for_status()
+    except requests.exceptions.HTTPError as e:
+        if r.status_code == 400:
+            click.echo('Error: Plugin already Downloaded', err=True)
+        elif r.status_code == 401:
+            click.echo('Error: You\'re not logged in', err=True)
+        elif r.status_code == 404:
+            click.echo('Error: Plugin doesn\'t exist', err=True)
+        else:
+            click.echo('Error: Problem happenned', err=True)
+        sys.exit(1)
+    except requests.exceptions.RequestException as e:
+        click.echo('Error: Unable to end the request with the server',
+                   err=True)
+        sys.exit(1)
+    click.echo(r.text)
+    click.echo('Plugin downloaded')
+
+
+@cli.command()
+@click.argument('plugin name', type=str)
+def install(plugin_name):
     """
     Install a plugin.
     """
 
     try:
-        r = requests.get(url + '/plugins/' + str(id) + '/install')
+        r = requests.get(url + '/plugins/' + plugin_name + '/install')
         r.raise_for_status()
     except requests.exceptions.HTTPError as e:
         if r.status_code == 400:
@@ -180,14 +210,14 @@ def install(id):
 
 
 @cli.command()
-@click.argument('id', type=int)
-def remove(id):
+@click.argument('plugin name', type=str)
+def remove(plugin_name):
     """
     Remove an installed plugin.
     """
 
     try:
-        r = requests.delete(url + '/plugins/' + str(id))
+        r = requests.delete(url + '/plugins/' + plugin_name)
         r.raise_for_status()
     except requests.exceptions.HTTPError as e:
         if r.status_code == 400:
@@ -208,14 +238,14 @@ def remove(id):
 
 
 @cli.command()
-@click.argument('id', type=int)
-def enable(id):
+@click.argument('plugin name', type=str)
+def enable(plugin_name):
     """
     Enable an installed plugin.
     """
 
     try:
-        r = requests.patch(url + '/plugins/' + str(id) + '/enable')
+        r = requests.patch(url + '/plugins/' + plugin_name + '/enable')
         r.raise_for_status()
     except requests.exceptions.HTTPError as e:
         if r.status_code == 400:
@@ -236,14 +266,14 @@ def enable(id):
 
 
 @cli.command()
-@click.argument('id', type=int)
-def disable(id):
+@click.argument('plugin name', type=str)
+def disable(plugin_name):
     """
     Disable an installed plugin.
     """
 
     try:
-        r = requests.patch(url + '/plugins/' + str(id) + '/disable')
+        r = requests.patch(url + '/plugins/' + plugin_name + '/disable')
         r.raise_for_status()
     except requests.exceptions.HTTPError as e:
         if r.status_code == 400:
