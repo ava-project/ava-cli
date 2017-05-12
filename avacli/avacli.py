@@ -126,7 +126,7 @@ def list(keyword=''):
 
 
 @cli.command()
-@click.argument('plugin name', type=str)
+@click.argument('plugin_name', type=str)
 def info(plugin_name):
     """
     Get information about a plugin.
@@ -152,7 +152,7 @@ def info(plugin_name):
 
 
 @cli.command()
-@click.argument('plugin name', type=str)
+@click.argument('plugin_name', type=str)
 @click.argument('author', type=str)
 def download(plugin_name, author):
     """
@@ -182,7 +182,7 @@ def download(plugin_name, author):
 
 
 @cli.command()
-@click.argument('plugin name', type=str)
+@click.argument('plugin_name', type=str)
 def install(plugin_name):
     """
     Install a plugin.
@@ -210,7 +210,7 @@ def install(plugin_name):
 
 
 @cli.command()
-@click.argument('plugin name', type=str)
+@click.argument('plugin_name', type=str)
 def remove(plugin_name):
     """
     Remove an installed plugin.
@@ -238,7 +238,7 @@ def remove(plugin_name):
 
 
 @cli.command()
-@click.argument('plugin name', type=str)
+@click.argument('plugin_name', type=str)
 def enable(plugin_name):
     """
     Enable an installed plugin.
@@ -266,7 +266,7 @@ def enable(plugin_name):
 
 
 @cli.command()
-@click.argument('plugin name', type=str)
+@click.argument('plugin_name', type=str)
 def disable(plugin_name):
     """
     Disable an installed plugin.
