@@ -46,7 +46,6 @@ def login():
         click.echo('Error: Unable to end the request with the server',
                    err=True)
         sys.exit(1)
-    click.echo(r.text)
     click.echo('Logged In.')
 
 
@@ -62,6 +61,7 @@ def logout():
     except requests.exceptions.HTTPError as e:
         if r.status_code == 400:
             click.echo('Error: Bad credentials', err=True)
+        elif r.status_code == 40:
         else:
             click.echo('Error: Problem happenned', err=True)
         sys.exit(1)
@@ -69,7 +69,6 @@ def logout():
         click.echo('Error: Unable to end the request with the server',
                    err=True)
         sys.exit(1)
-    click.echo(r.text)
     click.echo('Logged Out.')
 
 
