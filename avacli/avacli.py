@@ -61,7 +61,7 @@ def logout():
     except requests.exceptions.HTTPError as e:
         if r.status_code == 400:
             click.echo('Error: Bad credentials', err=True)
-        elif r.status_code == 40:
+        elif r.status_code == 401:
         else:
             click.echo('Error: Problem happenned', err=True)
         sys.exit(1)
@@ -338,4 +338,21 @@ def update():
     Update all plugins.
     """
 
-    click.echo('Debug')
+    try:
+        r = requests.patch(url + '/plugins/' + plugin_name)
+        r.raise_for_status()
+    except requests.exceptions.HTTPError as e:
+        if r.status_code == 400:
+            click.echo('Plugin already up to date', err=True)
+        elif r.status_code == 401:
+            click.echo('Error: You\'re not logged in', err=True)
+        elif r.status_code == 404:
+            click.echo('Error: Plugin not downloaded', err=True)
+        else:
+            click.echo('Error: Problem happenned', err=True)
+        sys.exit(1)
+    except requests.exceptions.RequestException as e:
+        click.echo('Error: Unable to end the request with the server',
+                   err=True)
+        sys.exit(1)
+    click.echo('Plugin updated')
