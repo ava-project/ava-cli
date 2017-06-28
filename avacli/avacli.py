@@ -333,7 +333,9 @@ def pause():
 
 
 @cli.command()
-def update():
+@cli.command()
+@click.argument('plugin_name', type=str)
+def update(plugin_name):
     """
     Update all plugins.
     """
