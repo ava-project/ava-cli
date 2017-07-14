@@ -62,6 +62,7 @@ def logout():
         if r.status_code == 400:
             click.echo('Error: Bad credentials', err=True)
         elif r.status_code == 401:
+            click.echo('Error: You are not logged in', err=True)
         else:
             click.echo('Error: Problem happenned', err=True)
         sys.exit(1)
@@ -332,7 +333,6 @@ def pause():
     click.echo('Listening disabled')
 
 
-@cli.command()
 @cli.command()
 @click.argument('plugin_name', type=str)
 def update(plugin_name):
