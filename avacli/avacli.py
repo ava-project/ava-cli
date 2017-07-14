@@ -62,6 +62,7 @@ def logout():
         if r.status_code == 400:
             click.echo('Error: Bad credentials', err=True)
         elif r.status_code == 401:
+            pass
         else:
             click.echo('Error: Problem happenned', err=True)
         sys.exit(1)
