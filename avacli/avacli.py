@@ -294,46 +294,6 @@ def disable(plugin_name):
 
 
 @cli.command()
-def play():
-    """
-    Enable daemon listening.
-    """
-
-    try:
-        r = requests.patch(url + '/playback/play')
-        r.raise_for_status()
-    except requests.exceptions.HTTPError as e:
-        click.echo('Error: Problem happenned', err=True)
-        sys.exit(1)
-    except requests.exceptions.RequestException as e:
-        click.echo('Error: Unable to end the request with the server',
-                   err=True)
-        sys.exit(1)
-    click.echo(r.text)
-    click.echo('Listening enabled')
-
-
-@cli.command()
-def pause():
-    """
-    Disable daemon listening.
-    """
-
-    try:
-        r = requests.patch(url + '/playback/pause')
-        r.raise_for_status()
-    except requests.exceptions.HTTPError as e:
-        click.echo('Error: Problem happenned', err=True)
-        sys.exit(1)
-    except requests.exceptions.RequestException as e:
-        click.echo('Error: Unable to end the request with the server',
-                   err=True)
-        sys.exit(1)
-    click.echo(r.text)
-    click.echo('Listening disabled')
-
-
-@cli.command()
 @click.argument('plugin_name', type=str)
 def update(plugin_name):
     """
