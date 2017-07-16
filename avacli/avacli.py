@@ -99,10 +99,9 @@ def me():
 
 
 @cli.command()
-@click.argument('keyword', required=False)
-def list(keyword=''):
+def list():
     """
-    List all plugin available.
+    List all plugin installed.
     """
 
     try:
@@ -116,24 +115,26 @@ def list(keyword=''):
                    err=True)
         sys.exit(1)
     plugins = r.json()
-    click.echo('Plugin List:')
-    for plugin in plugins:
-        click.echo('#########################')
-        click.echo('Name: ' + plugin['name'])
-        click.echo('ID: ' + str(plugin['id']))
-        click.echo('Version: ' + plugin['version'])
-        click.echo('Description: ' + plugin['description'])
+    click.echo('Plugin Installed:')
+    click.echo(plugins)
+#    for plugin in plugins:
+#        click.echo('#########################')
+#        click.echo('Name: ' + plugin['name'])
+#        click.echo('ID: ' + str(plugin['id']))
+#        click.echo('Version: ' + plugin['version'])
+#        click.echo('Description: ' + plugin['description'])
 
 
 @cli.command()
+@click.argument('author', type=str)
 @click.argument('plugin_name', type=str)
-def info(plugin_name):
+def info(author, plugin_name):
     """
     Get information about a plugin.
     """
 
     try:
-        r = requests.get(url + '/plugins/' + plugin_name)
+        r = requests.get(url + '/plugins/' + author + '/' + plugin_name)
         r.raise_for_status()
     except requests.exceptions.HTTPError as e:
         if r.status_code == 404:
@@ -147,49 +148,21 @@ def info(plugin_name):
         sys.exit(1)
     plugin = r.json()
     click.echo('Name: ' + plugin['name'])
-    click.echo('Version: ' + plugin['version'])
-    click.echo('Description: ' + plugin['description'])
+    click.echo('Version: ' + str(plugin['last_version']))
+    click.echo('Author: ' + plugin['author'])
 
 
 @cli.command()
-@click.argument('plugin_name', type=str)
 @click.argument('author', type=str)
-def download(plugin_name, author):
-    """
-    Dowload a plugin.
-    """
-
-    try:
-        r = requests.get(url + '/plugins/' + author + '/' +
-                         plugin_name + '/download')
-        r.raise_for_status()
-    except requests.exceptions.HTTPError as e:
-        if r.status_code == 400:
-            click.echo('Error: Plugin already Downloaded', err=True)
-        elif r.status_code == 401:
-            click.echo('Error: You\'re not logged in', err=True)
-        elif r.status_code == 404:
-            click.echo('Error: Plugin doesn\'t exist', err=True)
-        else:
-            click.echo('Error: Problem happenned', err=True)
-        sys.exit(1)
-    except requests.exceptions.RequestException as e:
-        click.echo('Error: Unable to end the request with the server',
-                   err=True)
-        sys.exit(1)
-    click.echo(r.text)
-    click.echo('Plugin downloaded')
-
-
-@cli.command()
 @click.argument('plugin_name', type=str)
-def install(plugin_name):
+def install(author, plugin_name):
     """
     Install a plugin.
     """
 
     try:
-        r = requests.get(url + '/plugins/' + plugin_name + '/install')
+        r = requests.get(url + '/plugins/' + author + '/' +
+                         plugin_name + '/download')
         r.raise_for_status()
     except requests.exceptions.HTTPError as e:
         if r.status_code == 400:
@@ -205,7 +178,6 @@ def install(plugin_name):
         click.echo('Error: Unable to end the request with the server',
                    err=True)
         sys.exit(1)
-    click.echo(r.text)
     click.echo('Plugin installed')
 
 
