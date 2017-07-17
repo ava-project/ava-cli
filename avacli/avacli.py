@@ -43,7 +43,7 @@ def login():
             click.echo('Error: Problem happenned', err=True)
         sys.exit(1)
     except requests.exceptions.RequestException as e:
-        click.echo('Error: Unable to end the request with the server',
+        click.echo('Error: Unable to end the request with AVA',
                    err=True)
         sys.exit(1)
     click.echo('Logged In.')
@@ -67,7 +67,7 @@ def logout():
             click.echo('Error: Problem happenned', err=True)
         sys.exit(1)
     except requests.exceptions.RequestException as e:
-        click.echo('Error: Unable to end the request with the server',
+        click.echo('Error: Unable to end the request with AVA',
                    err=True)
         sys.exit(1)
     click.echo('Logged Out.')
@@ -85,11 +85,13 @@ def me():
     except requests.exceptions.HTTPError as e:
         if r.status_code == 400:
             click.echo('Error: Bad credentials', err=True)
+        elif r.status_code == 401:
+            click.echo('Error: You are not logged in', err=True)
         else:
             click.echo('Error: Problem happenned', err=True)
         sys.exit(1)
     except requests.exceptions.RequestException as e:
-        click.echo('Error: Unable to end the request with the server',
+        click.echo('Error: Unable to end the request with AVA',
                    err=True)
         sys.exit(1)
     click.echo('Username: ' + r.json()['username'])
@@ -111,18 +113,16 @@ def list():
         click.echo('Error: Problem happenned', err=True)
         sys.exit(1)
     except requests.exceptions.RequestException as e:
-        click.echo('Error: Unable to end the request with the server',
+        click.echo('Error: Unable to end the request with AVA',
                    err=True)
         sys.exit(1)
-    plugins = r.json()
+    plugins = r.json()['data']
     click.echo('Plugin Installed:')
-    click.echo(plugins)
-#    for plugin in plugins:
-#        click.echo('#########################')
-#        click.echo('Name: ' + plugin['name'])
-#        click.echo('ID: ' + str(plugin['id']))
-#        click.echo('Version: ' + plugin['version'])
-#        click.echo('Description: ' + plugin['description'])
+    for plugin in plugins:
+        click.echo('#########################')
+        click.echo('Name: ' + plugin['name'])
+        click.echo('Version: ' + plugin['version'])
+        click.echo('Description: ' + plugin['description'])
 
 
 @cli.command()
@@ -143,7 +143,7 @@ def info(author, plugin_name):
             click.echo('Error: Problem happenned', err=True)
         sys.exit(1)
     except requests.exceptions.RequestException as e:
-        click.echo('Error: Unable to end the request with the server',
+        click.echo('Error: Unable to end the request with AVA',
                    err=True)
         sys.exit(1)
     plugin = r.json()
@@ -175,7 +175,7 @@ def install(author, plugin_name):
             click.echo('Error: Problem happenned', err=True)
         sys.exit(1)
     except requests.exceptions.RequestException as e:
-        click.echo('Error: Unable to end the request with the server',
+        click.echo('Error: Unable to end the request with AVA',
                    err=True)
         sys.exit(1)
     click.echo('Plugin installed')
@@ -202,10 +202,9 @@ def remove(plugin_name):
             click.echo('Error: Problem happenned', err=True)
         sys.exit(1)
     except requests.exceptions.RequestException as e:
-        click.echo('Error: Unable to end the request with the server',
+        click.echo('Error: Unable to end the request with AVA',
                    err=True)
         sys.exit(1)
-    click.echo(r.text)
     click.echo('Plugin removed')
 
 
@@ -230,7 +229,7 @@ def enable(plugin_name):
             click.echo('Error: Problem happenned', err=True)
         sys.exit(1)
     except requests.exceptions.RequestException as e:
-        click.echo('Error: Unable to end the request with the server',
+        click.echo('Error: Unable to end the request with AVA',
                    err=True)
         sys.exit(1)
     click.echo(r.text)
@@ -258,7 +257,7 @@ def disable(plugin_name):
             click.echo('Error: Problem happenned', err=True)
         sys.exit(1)
     except requests.exceptions.RequestException as e:
-        click.echo('Error: Unable to end the request with the server',
+        click.echo('Error: Unable to end the request with AVA',
                    err=True)
         sys.exit(1)
     click.echo(r.text)
@@ -286,7 +285,7 @@ def update(plugin_name):
             click.echo('Error: Problem happenned', err=True)
         sys.exit(1)
     except requests.exceptions.RequestException as e:
-        click.echo('Error: Unable to end the request with the server',
+        click.echo('Error: Unable to end the request with AVA',
                    err=True)
         sys.exit(1)
     click.echo('Plugin updated')
